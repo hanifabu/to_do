@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive To-Do List</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+        }
+
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2 class="text-center mb-4">To-Do List</h2>
+
+        <!-- Add Task Form -->
+        <form id="taskForm">
+            <div class="form-group">
+                <label for="title">Task Title:</label>
+                <input type="text" class="form-control" id="title" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Task Description:</label>
+                <textarea class="form-control" id="description" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" class="form-control" id="date" required>
+            </div>
+            <div class="form-group">
+                <label>Status:</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="status" id="start" value="start" checked>
+                    <label class="form-check-label" for="start">Start</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="status" id="done" value="done">
+                    <label class="form-check-label" for="done">Done</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="status" id="pending" value="pending">
+                    <label class="form-check-label" for="pending">Pending</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="status" id="notWork" value="notWork">
+                    <label class="form-check-label" for="notWork">Not Work</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="status" id="others" value="others">
+                    <label class="form-check-label" for="others">Others</label>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addTask()">Add Task</button>
+        </form>
+
+        <hr>
+
+        <!-- Task List -->
+        <ul id="taskList" class="list-group">
+            <!-- Task items will be dynamically added here -->
+        </ul>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <script>
+        function addTask() {
+            // Get form values
+            var title = document.getElementById("title").value;
+            var description = document.getElementById("description").value;
+            var date = document.getElementById("date").value;
+            var status = document.querySelector('input[name="status"]:checked').value;
+
+            // Create task item
+            var taskItem = document.createElement("li");
+            taskItem.className = "list-group-item";
+            taskItem.innerHTML = `
+        <div>
+          <h5>${title}</h5>
+          <p>${description}</p>
+          <small>${date}</small>
+        </div>
+        <div>
+          <span class="status-label">${status}</span>
+          <button class="btn btn-info btn-sm mx-2" onclick="editTask(this)">Edit</button>
+          <button class="btn btn-success btn-sm" onclick="updateTask(this)">Update</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteTask(this)">Delete</button>
+        </div>
+      `;
+
+            // Append task item to the list
+            document.getElementById("taskList").appendChild(taskItem);
+
+            // Clear form fields
+            document.getElementById("title").value = "";
+            document.getElementById("description").value = "";
+            document.getElementById("date").value = "";
+            document.querySelector('input[name="status"]:checked').checked = true;
+        }
+
+        function editTask(button) {
+            var taskItem = button.parentNode.parentNode;
+            var title = taskItem.querySelector("h5").textContent;
+            var description = taskItem.querySelector("p").textContent;
+            var date = taskItem.querySelector("small").textContent;
+            var status = taskItem.querySelector(".status-label").textContent;
+
+            // Populate form with task details
+            document.getElementById("title").value = title;
+            document.getElementById("description").value = description;
+            document.getElementById("date").value = date;
+
+            // Check the radio button corresponding to the status
+            var statusRadio = document.querySelector(`input[name="status"][value="${status}"]`);
+            if (statusRadio) {
+                statusRadio.checked = true;
+            }
+
+            // Remove the task item from the list
+            taskItem.remove();
+        }
+
+        function updateTask(button) {
+            // Similar to addTask, you can implement the update logic here
+            // This function is just a placeholder
+            alert("Update functionality will be implemented here");
+        }
+
+        function deleteTask(button) {
+            var taskItem = button.parentNode.parentNode;
+            taskItem.remove();
+        }
+    </script>
+
+</body>
+
+</html>
